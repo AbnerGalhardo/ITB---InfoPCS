@@ -1,114 +1,110 @@
 <?php
-session_start();
-if (!isset($_SESSION["usuario"])) {
-    header("Location: ../login.php");
+include_once __DIR__ . '/../config/db.php';
+
+if (!isset($_GET['patrimonio'])) {
+    header("Location: index.php");
     exit;
 }
 
-require_once "../config/db.php";
+$patrimonio = $_GET['patrimonio'];
 
-if (!isset($_GET["patrimonio"])) {
-    die("Patrimônio não informado.");
-}
+$stmt = $pdo->prepare("SELECT * FROM maquinas WHERE patrimonio = :patrimonio");
+$stmt->bindParam(':patrimonio', $patrimonio);
+$stmt->execute();
 
-$patrimonio = $_GET["patrimonio"];
+$pc = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("SELECT * FROM maquinas WHERE patrimonio = ?");
-$stmt->execute([$patrimonio]);
-$maquina = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$maquina) {
-    die("Máquina não encontrada.");
+if (!$pc) {
+    echo "PC não encontrado.";
+    exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<link rel="shortcut icon" href="logo.png" type="image/x-icon">
 <head>
-    <meta charset="UTF-8">
-    <title>Detalhes - <?= htmlspecialchars($maquina["pc"]) ?></title>
-    <style>
-        body {
-            background: #1e1e1e;
-            color: #fff;
-            font-family: Arial;
-        }
-        .container {
-            max-width: 1100px;
-            margin: auto;
-        }
-        h2 {
-            margin-top: 20px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .card {
-            background: #2a2a2a;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .card h3 {
-            margin-top: 0;
-            color: #4fc3f7;
-        }
-        .voltar {
-            display: inline-block;
-            margin-top: 15px;
-            color: #4fc3f7;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Detalhes do PC</title>
+
+<style>
+body {
+    background: #0f1115;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    margin: 0;
+}
+.container {
+    padding: 40px;
+}
+a {
+    color: #4db8ff;
+    text-decoration: none;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+.card {
+    background: #1a1c22;
+    padding: 20px;
+    border-radius: 10px;
+}
+.card h3 {
+    color: #4db8ff;
+    margin-top: 0;
+}
+</style>
 </head>
 <body>
 
 <div class="container">
-    <a class="voltar" href="maquinas.php">← Voltar</a>
 
-    <h2>PC: <?= htmlspecialchars($maquina["pc"]) ?></h2>
-    <p><strong>Patrimônio:</strong> <?= htmlspecialchars($maquina["patrimonio"]) ?></p>
-    <p><strong>Usuário:</strong> <?= htmlspecialchars($maquina["usuario"]) ?></p>
+<a href="index.php">← Voltar</a>
 
-    <div class="grid">
+<h1>PC: <?= htmlspecialchars($pc['pc']) ?></h1>
 
-        <div class="card">
-            <h3>Sistema</h3>
-            <p><strong>SO:</strong> <?= htmlspecialchars($maquina["so"]) ?></p>
-            <p><strong>Arquitetura:</strong> <?= htmlspecialchars($maquina["arquitetura"]) ?></p>
-            <p><strong>Versão:</strong> <?= htmlspecialchars($maquina["versao_so"]) ?></p>
-            <p><strong>Fabricante:</strong> <?= htmlspecialchars($maquina["fabricante"]) ?></p>
-        </div>
+<p><strong>Patrimônio:</strong> <?= htmlspecialchars($pc['patrimonio']) ?></p>
+<p><strong>Usuário:</strong> <?= htmlspecialchars($pc['usuario']) ?></p>
+<p><strong>Setor:</strong> <?= htmlspecialchars($pc['setor']) ?></p>
 
-        <div class="card">
-            <h3>Processador</h3>
-            <p><?= htmlspecialchars($maquina["cpu"]) ?></p>
-        </div>
+<div class="grid">
 
-        <div class="card">
-            <h3>Memória</h3>
-            <p><?= htmlspecialchars($maquina["ram"]) ?> GB</p>
-        </div>
-
-        <div class="card">
-            <h3>Placa-mãe</h3>
-            <p><?= htmlspecialchars($maquina["placa_mae"]) ?></p>
-        </div>
-
-        <div class="card">
-            <h3>BIOS</h3>
-            <p><?= htmlspecialchars($maquina["bios"]) ?></p>
-        </div>
-
-        <div class="card">
-            <h3>Disco</h3>
-            <p><?= htmlspecialchars($maquina["disco"]) ?></p>
-        </div>
-
-    </div>
+<div class="card">
+    <h3>Sistema</h3>
+    <p><strong>SO:</strong> <?= htmlspecialchars($pc['so']) ?></p>
+    <p><strong>Arquitetura:</strong> <?= htmlspecialchars($pc['arquitetura']) ?></p>
+    <p><strong>Versão:</strong> <?= htmlspecialchars($pc['versao_so']) ?></p>
+    <p><strong>Fabricante:</strong> <?= htmlspecialchars($pc['fabricante']) ?></p>
 </div>
 
+<div class="card">
+    <h3>Processador</h3>
+    <p><?= htmlspecialchars($pc['cpu']) ?></p>
+</div>
+
+<div class="card">
+    <h3>Memória</h3>
+    <p><?= htmlspecialchars($pc['ram']) ?></p>
+</div>
+
+<div class="card">
+    <h3>Placa-mãe</h3>
+    <p><?= htmlspecialchars($pc['placa_mae']) ?></p>
+</div>
+
+<div class="card">
+    <h3>BIOS</h3>
+    <p><?= htmlspecialchars($pc['bios']) ?></p>
+</div>
+
+<div class="card">
+    <h3>Disco</h3>
+    <p><?= htmlspecialchars($pc['disco']) ?></p>
+</div>
+
+</div>
+</div>
 </body>
 </html>

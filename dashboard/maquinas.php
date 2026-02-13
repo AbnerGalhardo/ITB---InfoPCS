@@ -46,7 +46,7 @@ $maquinas = $sql->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
-
+<a href="upload_cpuz.php">+ Importar CPU-Z</a>
 <h2>Máquinas cadastradas</h2>
 
 <table>

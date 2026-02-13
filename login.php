@@ -15,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($user && password_verify($senha, $user["senha"])) {
         $_SESSION["usuario"] = $user["usuario"];
         $_SESSION["nome"] = $user["nome"];
+        $_SESSION["perfil"] = $user["perfil"];
         header("Location: dashboard/maquinas.php");
         exit;
     } else {
