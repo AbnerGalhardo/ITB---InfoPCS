@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["usuario"] = $user["usuario"];
         $_SESSION["nome"] = $user["nome"];
         $_SESSION["perfil"] = $user["perfil"];
-        header("Location: dashboard/maquinas.php");
+        header("Location: dashboard/index.php");
         exit;
     } else {
         $erro = "Usuário ou senha inválidos";

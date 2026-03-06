@@ -150,7 +150,7 @@ button:hover {
 <body>
 
 <div class="topbar">
-    <h1>InfoPCS - Dashboard</h1>
+    <h1>InfoPCS</h1>
     <a href="upload_cpuz.php" class="btn-add">+ Importar CPUZ</a>
 </div>
 
